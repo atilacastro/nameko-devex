@@ -17,7 +17,7 @@ RUN pip install importlib-metadata==4.13.0
 ```
 
 ### Test output
-* Deploy nameko microservice in K8S
+* Deploy nameko microservice in Docker
 ```sh
 (nameko-devex)  ✘ atila@MacBook-Pro-de-Saulo  ~/Projects/nameko-devex   master ±  make smoke-test
 ./test/nex-smoketest.sh http://localhost:8003
