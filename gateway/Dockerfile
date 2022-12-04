@@ -23,6 +23,8 @@ COPY run.sh /var/nameko/run.sh
 
 RUN chmod +x /var/nameko/run.sh
 
+RUN pip install importlib-metadata==4.13.0
+
 USER nameko
 
 WORKDIR /var/nameko/
