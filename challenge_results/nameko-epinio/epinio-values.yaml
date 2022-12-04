@@ -1,0 +1,115 @@
+## Default values for Epinio Helm Chart.
+## This is a YAML-formatted file.
+## Declare variables to be passed into your templates.
+
+# The email address you are planning to use for getting notifications about your certificates.
+email: "epinio@suse.com"
+# The URL of the container registry from where to pull container images
+# for the various created Pods. Don't confuse this registry with the "Epinio
+# registry" which is the one where Epinio stores the application images.
+registryURL: ""
+image:
+  epinio:
+    repository: ghcr.io/epinio/epinio-server
+    tag: ""
+  bash:
+    repository: library/bash
+    tag: 5.1.4
+  awscli:
+    repository: amazon/aws-cli
+    tag: 2.0.52
+  kubectl:
+    repository: lachlanevenson/k8s-kubectl
+    tag: v1.22.2
+server:
+  # Domain which serves the Rancher UI (to access the API)
+  accessControlAllowOrigin: ""
+  # increase this value to increase all timeouts by the same factor
+  timeoutMultiplier: 1
+  # Change this to a random string. Used for session cookies by the API server.
+  sessionKey: "12345"
+  # Increase this value to instruct the API server to produce more debug output
+  traceLevel: 0
+  # The ingressClassName is used to select the ingress controller for apps. If empty no class will be added to their ingresseses.
+  ingressClassName: ""
+
+ingress:
+  # The ingressClassName is used to select the ingress controller for the server. If empty no class will be added to the ingresses.
+  ingressClassName: ""
+
+certManagerNamespace: cert-manager
+
+
+# Connection details for the S3 storage
+s3:
+  endpoint: s3.amazonaws.com
+  bucket: ""
+  region: ""
+  accessKeyID: ""
+  secretAccessKey: ""
+  useSSL: true
+  # Set it to an existing secret if S3 is using a self signed cert
+  certificateSecret: ""
+
+api:
+  # Default user username
+  username: admin
+  # Default user password
+  password: password
+
+# Minio subchart values
+minio:
+  enabled: false
+  # hardcode this, to avoid problems with release name
+  fullnameOverride: minio
+  existingSecret: minio-creds
+  tls:
+    enabled: true
+    certSecret: minio-tls
+    publicCrt: tls.crt
+    privateKey: tls.key
+  persistence:
+    size: 2Gi
+  drivesPerNode: 4
+  replicas: 1
+  resources:
+    requests:
+      memory: 1Gi
+  makeUserJob:
+    podAnnotations:
+      linkerd.io/inject: disabled
+
+kubed:
+  enabled: false
+  fullnameOverride: kubed
+  enableAnalytics: false
+
+containerregistry:
+  enabled: false
+
+  image: registry:2.7.1
+  imagePullPolicy: IfNotPresent
+
+  # We create a service with type `NodePort` only in
+  # local deployment as Kubelet cannot access the
+  # secured registry because there is no way to add
+  # registry CA to kubelet.
+  createNodePort: true
+
+  # The ingressClassName is used to select the ingress controller. If empty no class will be added to the ingresses.
+  ingressClassName: ""
+
+
+global:
+  # The domain that will be used to access the epinio API server and the registry
+  domain: "epinio.127.0.0.1.sslip.io"
+
+  # Connection details for the container registry.
+  registryURL: ""              # Skip if containerregistry.enabled is true
+  registryUsername: "admin"
+  registryPassword: "changeme"
+  registryNamespace: "apps"    # Used in registry path when pushing -> "external.tld/apps/APPNAME"
+
+  # The name of the cluster issuer to use.
+  # Epinio creates three options: 'epinio-ca', 'letsencrypt-production', and 'selfsigned-issuer'.
+  tlsIssuer: "epinio-ca"
