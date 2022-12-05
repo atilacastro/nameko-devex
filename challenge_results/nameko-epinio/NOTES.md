@@ -59,18 +59,6 @@ Do you want to trust it (y/n): y
 ✔️  Login successful
 ```
 
-Curl Output
-```sh
-(nameko-devex)  ✘ atila@MacBook-Pro-de-Saulo  ~/Projects/nameko-devex   master ±  curl -s "http://localhost:8003/products/the_odyssey" | jq .
-{
-  "passenger_capacity": 101,
-  "in_stock": 9,
-  "maximum_speed": 5,
-  "id": "the_odyssey",
-  "title": "The Odyssey"
-}
-```
-
 ## Issue after launch Epinio Plataform
 
 Error:
